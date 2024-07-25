@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <title>Simple Pricing Slider with HTML, CSS and Javascript</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.28.0/feather.min.js"></script>
+    <style>
+        body, h2, p {
+            font-family: "Poppins, sans-serif";
+            font-weight: 400;
+            font-style: normal;
+            background-color: #1a202c;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: "Poppins, sans-serif";
+        }
+        h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-family: "Poppins, sans-serif";
+            font-weight: 400;
+        }
+        p {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-family: "Poppins, sans-serif";
+            font-weight: 400;
+        }
+        .slider-container {
+            margin-bottom: 2rem;
+        }
+        input[type="range"] {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        .edit-display {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 400;
+            font-style: normal;
+            font-family: "Poppins, sans-serif";
+        }
+        .pricing-tiers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .tier {
+            background-color: #2d3748;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+        .tier.selected {
+            box-shadow: 0 0 0 2px #ffffff;
+        }
+        .tier-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .tier-name {
+            font-size: 1.2rem;
+            font-family: "Poppins", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+        .tier-price {
+            font-size: 1.5rem;
+            font-family: "Poppins", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            margin-bottom: 0.5rem;
+        }
+        .tier-features {
+            list-style-type: none;
+            padding: 0;
+        }
+        .tier-features li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .tier-features li i {
+            margin-right: 0.5rem;
+            width: 0.5rem;
+            height: 0.5rem;
+        }
+        .text-feature{
+            padding-left: 0.5rem;
+            font-family: "Poppins", sans-serif;
+            font-weight: 300;
+            font-style: normal;
+            font-size: 0.9rem;
+        }
+        .icon-main {
+            width:24px;
+            height:24px;
+        }
+        .icon-feature-item {
+            width:16px;
+            height:16px;
+        }
+        .text-edit-display{
+            font-family: "Poppins", sans-serif;
+        }
+        .poppins-regular {
+            font-family: "Poppins", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+        .poppins-light {
+            font-family: "Poppins", sans-serif;
+            font-weight: 300;
+            font-style: normal;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="poppins-regular">Choose Your Pricing Plan</h2>
+        <p class="poppins-light">Different photos require different edits. It lets you choose the edits you need per photo, so you don't pay more than you need!</p>
+        
+        <div class="slider-container">
+            <input type="range" id="editSlider" min="50" max="1000" value="0" step="50">
+            <div class="edit-display"><span class="text-edit-display">Up to <span id="editDisplay" class="text-edit-display">40</span> edits</span></div>
+        </div>
+        
+        <div class="pricing-tiers" id="pricingTiers">
+            <!-- Pricing tiers will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script>
+        const tiers = {
+            free: {
+                name: 'Free',
+                icon: 'camera',
+                bgColor: '#201F1C',
+                borderColor: '#C67BFF',
+                iconColor: '#C67BFF',
+                editsPerUse: 0,
+                maxEdits: 20,
+                features: [
+                    { name: 'Try All Features', icon: 'star' },
+                    { name: '20 edits', icon: 'image' },
+                ]
+            },
+            core: {
+                name: 'Core',
+                icon: 'zap',
+                bgColor: '#201F1C',
+                borderColor: '#53DEFE',
+                iconColor: '#53DEFE',
+                editsPerUse: 0.5,
+                minEdits: 40,
+                features: [
+                    { name: 'Cropping', icon: 'crop' },
+                    { name: 'Straightening', icon: 'scissors' },
+                    { name: 'Skin Smoothing', icon: 'user-check' },
+                    { name: 'Subject Mask', icon: 'image' },
+                    { name: 'AI Color Correction', icon: 'droplet' },
+                    { name: 'Browser App', icon: 'cloud-lightning' },
+                    { name: 'Google Drive Integration', icon: 'hard-drive' },
+                ]
+            },
+            pro: {
+                name: 'Pro',
+                icon: 'star',
+                bgColor: '#201F1C',
+                borderColor: '#FF8A33',
+                iconColor: '#FF8A33',
+                editsPerUse: 1,
+                features: [
+                    { name: 'Everything in Core', icon: 'zap' },
+                    { name: 'Premium Talent Styles', icon: 'star' },
+                ]
+            },
+            enterprise: {
+                name: 'Enterprise',
+                icon: 'cloud-lightning',
+                bgColor: '#201F1C',
+                borderColor: '#B6ED31',
+                iconColor: '#B6ED31',
+                editsPerUse: 'Custom',
+                features: [
+                    { name: 'Volume Discounts', icon: 'zap' },
+                    { name: 'Custom Solutions', icon: 'star' },
+                    { name: 'Dedicated Support', icon: 'user-check' },
+                ]
+            }
+        };
+
+        const slider = document.getElementById('editSlider');
+        const editDisplay = document.getElementById('editDisplay');
+        const pricingTiers = document.getElementById('pricingTiers');
+
+        function updateDisplay() {
+            const edits = parseInt(slider.value);
+            editDisplay.textContent = edits;
+            //updateSelectedTier(edits);
+            updatePricing(edits);
+        }
+
+        function updateSelectedTier(edits) {
+            let selectedTier = 'core';
+            if (edits > 80) {
+                selectedTier = 'pro';
+            }
+
+            document.querySelectorAll('.tier').forEach(tier => {
+                tier.classList.remove('selected');
+            });
+
+            const selectedTierElement = document.querySelector(`.tier[data-tier="${selectedTier}"]`);
+            if (selectedTierElement) {
+                selectedTierElement.classList.add('selected');
+            }
+        }
+
+        function updatePricing(edits) {
+            Object.keys(tiers).forEach(tierKey => {
+                const tier = tiers[tierKey];
+                const priceElement = document.querySelector(`.tier[data-tier="${tierKey}"] .tier-price`);
+                if (priceElement) {
+                    if (tierKey === 'free') {
+                        priceElement.textContent = 'Free';
+                    } else if (tierKey === 'enterprise') {
+                        priceElement.textContent = 'Custom';
+                    } else {
+                        const tierEdits = Math.max(edits, tier.minEdits || 0);
+                        const price = (tierEdits * tier.editsPerUse).toFixed(2);
+                        priceElement.textContent = `$${price}/month`;
+                    }
+                }
+            });
+        }
+
+        function createPricingTiers() {
+            Object.entries(tiers).forEach(([key, tier]) => {
+                const tierElement = document.createElement('div');
+                tierElement.className = 'tier';
+                tierElement.setAttribute('data-tier', key);
+                tierElement.style.backgroundColor = tier.bgColor;
+                tierElement.style.border = `2px solid ${tier.borderColor}`;
+
+                tierElement.innerHTML = `
+                    <div class="tier-header">
+                        <span class="tier-name">${tier.name}</span>
+                        <i data-feather="${tier.icon}" class="icon-main" style="stroke:${tier.iconColor};"></i>
+                    </div>
+                    <div class="tier-price">
+                        ${key === 'free' ? 'Free' : key === 'enterprise' ? 'Custom' : '$0.00/month'}
+                    </div>
+                    <ul class="tier-features">
+                        ${tier.features.map(feature => `
+                            <li>
+                                <i data-feather="${feature.icon}" class="icon-feature-item" style="stroke:${tier.iconColor};"></i>
+                                <span class="text-feature">${feature.name}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+
+                pricingTiers.appendChild(tierElement);
+            });
+
+            feather.replace();
+        }
+
+        slider.addEventListener('input', updateDisplay);
+        createPricingTiers();
+        updateDisplay();
+    </script>
+</body>
+</html>
